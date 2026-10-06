@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV Maker — Build a Professional Resume</title>
+<meta name="description" content="Free CV maker: build a professional resume in English or Dari, auto-generate your summary, choose a template, and download a real PDF file.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="app-header no-print">
+  <div class="wrap header-inner">
+    <div class="brand"><span class="brand-badge">CV</span><span data-i18n="appTitle">CV Maker</span></div>
+    <nav class="main-nav" id="mainNav" aria-label="Main menu">
+      <a data-menu="0" data-i18n="menuBuilder">Builder</a>
+      <a data-menu="5" data-i18n="menuTemplates">Templates</a>
+      <a id="navGuide" data-i18n="menuGuide">Guide</a>
+      <a id="navPreview" class="mobile-preview-btn" data-i18n="preview">Preview</a>
+    </nav>
+    <div class="header-controls">
+      <div class="seg" role="group" aria-label="Language">
+        <button id="langEn" class="active">EN</button>
+        <button id="langDa">دری</button>
+      </div>
+      <button id="themeToggle" class="icon-btn" aria-label="Toggle dark mode">🌙</button>
+      <button id="previewToggle" class="btn btn-ghost btn-sm mobile-preview-btn" data-i18n="preview">Preview</button>
+      <button id="hamburger" class="hamburger" aria-label="Menu">☰</button>
+    </div>
+  </div>
+  <div class="steps-bar"><div class="wrap"><div class="steps" id="stepsBar"></div></div></div>
+</header>
+
+<main class="wrap layout">
+  <section class="builder no-print" aria-label="CV builder">
+    <div class="meter" aria-label="CV strength">
+      <div class="meter-top"><span data-i18n="cvStrength">CV strength</span><span class="pct" id="meterPct">0%</span></div>
+      <div class="meter-bar"><span id="meterFill" style="width:0%"></span></div>
+    </div>
+
+    <!-- STEP 1: Personal -->
+    <div class="step-panel" data-step="0">
+      <h2 data-i18n="sPersonal">Personal Information</h2>
+      <p class="sub" data-i18n="sPersonalSub">Who you are and how employers can reach you.</p>
+      <div class="field"><label data-i18n="fullName">Full name</label><input id="f_name" data-i18n-ph="fullNamePh" placeholder="e.g. Ahmad Ahmadi"></div>
+      <div class="field"><label data-i18n="jobTitle">Job title</label><input id="f_title" data-i18n-ph="jobTitlePh" placeholder="e.g. Web Developer"></div>
+      <div class="grid2">
+        <div class="field"><label data-i18n="email">Email</label><input id="f_email" type="email" placeholder="name@email.com"></div>
+        <div class="field"><label data-i18n="phone">Phone</label><input id="f_phone" placeholder="+93 700 000 000"></div>
+      </div>
+      <div class="field"><label data-i18n="address">Address</label><input id="f_address" data-i18n-ph="addressPh" placeholder="e.g. Kabul, Afghanistan"></div>
+      <div class="field"><label data-i18n="website">Website / LinkedIn (optional)</label><input id="f_website" placeholder="linkedin.com/in/yourname"></div>
+      <div class="tip"><strong data-i18n="tipTitle">Tip</strong><span data-i18n="tipPersonal">Use a professional email address (firstname.lastname@email.com). Double-check your phone number — most employers call before emailing.</span></div>
+    </div>
+
+    <!-- STEP 2: Summary -->
+    <div class="step-panel" data-step="1" hidden>
+      <h2 data-i18n="sSummary">Professional Summary</h2>
+      <p class="sub" data-i18n="sSummarySub">2–4 sentences about who you are professionally.</p>
+      <button class="btn btn-generate" id="btnGenSummary">✨ <span data-i18n="genSummary">Generate summary for me</span></button>
+      <div class="field"><label data-i18n="summary">Summary</label><textarea id="f_summary" data-i18n-ph="summaryPh" placeholder="Motivated computer science graduate with..."></textarea></div>
+      <div class="tip"><strong data-i18n="tipTitle">Tip</strong><span data-i18n="tipSummary">The generator writes a draft from your experience, skills and education — then edit it in your own words.</span></div>
+    </div>
+
+    <!-- STEP 3: Education -->
+    <div class="step-panel" data-step="2" hidden>
+      <h2 data-i18n="sEducation">Education</h2>
+      <p class="sub" data-i18n="sEducationSub">Your degrees and studies, newest first.</p>
+      <div id="eduList"></div>
+      <button class="btn btn-ghost btn-sm" id="addEdu">＋ <span data-i18n="addEducation">Add education</span></button>
+      <div class="tip"><strong data-i18n="tipTitle">Tip</strong><span data-i18n="tipEducation">If you are a recent graduate, put education before work experience. Include relevant courses or projects if you lack work history.</span></div>
+    </div>
+
+    <!-- STEP 4: Experience -->
+    <div class="step-panel" data-step="3" hidden>
+      <h2 data-i18n="sExperience">Work Experience</h2>
+      <p class="sub" data-i18n="sExperienceSub">Jobs, internships, freelance and volunteer work.</p>
+      <div id="expList"></div>
+      <button class="btn btn-ghost btn-sm" id="addExp">＋ <span data-i18n="addExperience">Add experience</span></button>
+      <div class="tip"><strong data-i18n="tipTitle">Tip</strong><span data-i18n="tipExperience">Start each bullet with a strong verb: built, managed, taught, organized. Add numbers when you can: "Taught English to 30 students", "Built 5 websites".</span></div>
+    </div>
+
+    <!-- STEP 5: Skills & Languages -->
+    <div class="step-panel" data-step="4" hidden>
+      <h2 data-i18n="sSkillsLang">Skills &amp; Languages</h2>
+      <p class="sub" data-i18n="sSkillsLangSub">What you can do and which languages you speak.</p>
+      <div class="field"><label data-i18n="skills">Skills</label>
+        <div class="tagbox" id="skillTags"></div>
+        <input id="skillInput" data-i18n-ph="skillsPh" placeholder="Type a skill and press Enter">
+      </div>
+      <div class="field"><label data-i18n="languages">Languages</label>
+        <div id="langList"></div>
+        <div class="grid2" style="margin-top:8px">
+          <input id="newLangName" data-i18n-ph="languagePh" placeholder="Language">
+          <select id="newLangLevel"></select>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="addLang" style="margin-top:8px">＋ <span data-i18n="addLanguage">Add language</span></button>
+      </div>
+      <div class="tip"><strong data-i18n="tipTitle">Tip</strong><span data-i18n="tipSkills">List 6–10 skills most relevant to the job you want — not everything you have ever tried. Put the strongest first.</span></div>
+    </div>
+
+    <!-- STEP 6: Design & Export -->
+    <div class="step-panel" data-step="5" hidden>
+      <h2 data-i18n="sDesign">Design &amp; Export</h2>
+      <p class="sub" data-i18n="sDesignSub">Choose a look, then download your CV as a PDF file.</p>
+      <div class="field"><label data-i18n="chooseTemplate">Choose template</label>
+        <div class="tpl-grid" id="tplGrid">
+          <div class="tpl" data-tpl="modern"><div class="mini"><i style="left:8px;top:8px;bottom:8px;width:26px;background:var(--accent)"></i><i style="left:42px;top:12px;right:8px;height:8px"></i><i style="left:42px;top:26px;right:20px;height:6px"></i><i style="left:42px;top:38px;right:8px;height:6px"></i></div><span data-i18n="tplModern">Modern</span></div>
+          <div class="tpl" data-tpl="classic"><div class="mini"><i style="left:30%;right:30%;top:10px;height:8px"></i><i style="left:12px;right:12px;top:28px;height:5px"></i><i style="left:12px;right:12px;top:40px;height:5px"></i><i style="left:12px;right:12px;top:52px;height:5px"></i></div><span data-i18n="tplClassic">Classic</span></div>
+          <div class="tpl" data-tpl="minimal"><div class="mini"><i style="left:12px;top:12px;right:40%;height:10px"></i><i style="left:12px;right:12px;top:32px;height:2px"></i><i style="left:12px;right:12px;top:42px;height:5px"></i><i style="left:12px;right:30%;top:54px;height:5px"></i></div><span data-i18n="tplMinimal">Minimal</span></div>
+        </div>
+      </div>
+      <div class="field"><label data-i18n="accentColor">Accent color</label><div class="swatches" id="swatches"></div></div>
+      <div class="wizard-nav" style="margin-top:6px">
+        <button class="btn btn-primary" id="btnPdf">⬇ <span data-i18n="downloadPdf">Download PDF</span></button>
+      </div>
+      <p class="sub" style="margin-top:8px" data-i18n="pdfNote">The PDF file downloads directly — on iPhone choose "Save to Files" when prompted.</p>
+      <div class="wizard-nav">
+        <button class="btn btn-ghost btn-sm" id="btnExample"><span data-i18n="fillExample">Fill with example</span></button>
+        <button class="btn btn-ghost btn-sm" id="btnClear"><span data-i18n="clearAll">Clear all</span></button>
+      </div>
+      <p class="autosave" data-i18n="autosave">✓ All changes are saved automatically in this browser.</p>
+    </div>
+
+    <div class="wizard-nav">
+      <button class="btn btn-ghost" id="btnPrev">← <span data-i18n="previous">Previous</span></button>
+      <span class="spacer"></span>
+      <button class="btn btn-primary" id="btnNext"><span data-i18n="next">Next</span> →</button>
+    </div>
+  </section>
+
+  <section class="preview-pane" aria-label="CV preview">
+    <div class="preview-head no-print">
+      <h2 data-i18n="livePreview">Live preview</h2>
+      <span class="sub" style="margin:0" data-i18n="previewHint">Updates as you type</span>
+    </div>
+    <div id="cvSheet"><div id="cvRender"></div></div>
+  </section>
+</main>
+
+<!-- Guide modal -->
+<div class="modal no-print" id="guideModal" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <button class="modal-x" id="guideClose" aria-label="Close">✕</button>
+    <h2 data-i18n="guideTitle">How to build your CV</h2>
+    <ol>
+      <li data-i18n="guide1">Fill in your information step by step using the Next button.</li>
+      <li data-i18n="guide2">On the Summary step, tap "Generate summary for me" — the site writes a professional draft from your experience, skills and education. Edit it in your own words.</li>
+      <li data-i18n="guide3">Pick a template and accent color on the Design step.</li>
+      <li data-i18n="guide4">Tap Download PDF — the file downloads directly to your device.</li>
+    </ol>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
